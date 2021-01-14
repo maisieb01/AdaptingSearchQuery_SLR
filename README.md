@@ -1,1 +1,1 @@
-# AdoptingSearchQuery
+# AdaptingSearchQuery
