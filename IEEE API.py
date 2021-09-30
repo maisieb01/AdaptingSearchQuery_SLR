@@ -27,21 +27,20 @@ import requests
 # but implantable must come before cardiac.
 
 url="http://ieeexploreapi.ieee.org/api/v1/search/articles?"
-key="&apikey=ymuyw5jx2brg4n9gabgfadbw&format=json&format=json&max_records=20&start_record=1&sort_order=asc&sort_field=article_number&end_year=2020&start_year=2015"
+key="&apikey=ymuyw5jx2brg4n9gabgfadbw&format=json&format=json&max_records=200&start_record=1&sort_order=asc&sort_field=article_number&end_year=end_date&start_year=start_date"
 # key="&apikey=ymuyw5jx2brg4n9gabgfadbw&format=json&max_records=20&start_record=1&sort_order=asc&sort_field=article_number&end_year=2000&start_year=2013"
 
 # querytext="querytext=(Metadata%20OR%20%22predict%20OR%20%22software%20OR%20%22defect%20OR%20%22qulity%22)&max_records=20&start_record=1&sort_order=asc&sort_field=article_number&end_year=2000&start_year=2013"
 querytext="https://ieeexploreapi.ieee.org/api/v1/search/articles?querytext=(rfid%20NOT%20%22internet%20of%20things%22)"
-
-# querytext="querytext=( software OR software_program OR computer_software OR software_system OR software_package OR package ) AND ( defect OR shortcoming OR fault OR flaw OR blemish OR mar OR desert ) AND ( prediction OR anticipation OR prevision OR foretelling OR forecasting OR prognostication ) AND ( method OR method_acting )&end_year=2019&start_year=2020"
-# querytext="querytext=(Metadata+software+OR+software_program+OR+computer_software+OR+software_system+OR+software_package+OR+package+%29+AND+%28+defect+OR+shortcoming+OR+fault+OR+flaw+OR+blemish+OR+mar+OR+desert+%29+AND+%28+prediction+OR+anticipation+OR+prevision+OR+foretelling+OR+forecasting+OR+prognostication+%29+AND+%28+method+OR+method_acting+%29"
-#(software %20AND%20 (defect %20OR%20 fault) %20AND%20 (predict %20OR%20 prevision))
-# search_string = "&abstract=defect&end_year=2000&start_year=2000"
 response = requests.get(url+querytext+key)
 json_response = response.json()
 print(json_response)
 print(url+querytext+key)
 
+# querytext="querytext=( software OR software_program OR computer_software OR software_system OR software_package OR package ) AND ( defect OR shortcoming OR fault OR flaw OR blemish OR mar OR desert ) AND ( prediction OR anticipation OR prevision OR foretelling OR forecasting OR prognostication ) AND ( method OR method_acting )&end_year=2019&start_year=2020"
+# querytext="querytext=(Metadata+software+OR+software_program+OR+computer_software+OR+software_system+OR+software_package+OR+package+%29+AND+%28+defect+OR+shortcoming+OR+fault+OR+flaw+OR+blemish+OR+mar+OR+desert+%29+AND+%28+prediction+OR+anticipation+OR+prevision+OR+foretelling+OR+forecasting+OR+prognostication+%29+AND+%28+method+OR+method_acting+%29"
+#(software %20AND%20 (defect %20OR%20 fault) %20AND%20 (predict %20OR%20 prevision))
+# search_string = "&abstract=defect&end_year=2000&start_year=2000"
 
 # query = xplore.xploreapi.XPLORE('api_access_key')
 # query.abstractText('query')
