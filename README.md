@@ -1,1 +1,1 @@
-# AdaptingSearchQuery
+# SLR Search Query Building Service
