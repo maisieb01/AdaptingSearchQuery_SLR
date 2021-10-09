@@ -1,0 +1,499 @@
+openapi: 3.0.0
+info:
+  title: Services for Building SLR Search Queries
+  description: This platform facilitates search query building for Systematic Literature Review. It provides endpoints to build queries from given seed(s) and enrich the generated query. It also provides an interface to execute and retrieve studies calling digital libraries APIs. It is devised by a set of endpoints to use embedding models to calculate QPPs features.  Finally, the reult of feedback is captured with an endpoint to be used for refining the queries.
+  version: 1.2.10
+  contact:
+    email: ma.badami@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'http://127.0.0.1:5000'
+paths:
+  /searchquery:
+    post:
+      tags:
+        - Build and enrich search queries
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                questions:
+                  type: string
+                  format: binary
+                  description: The question file should be in a csv
+                    format(QuestionID|Question)
+                objectives:
+                  type: string
+                  format: binary
+                  description: The objective file should be in a csv format(ID|objective)
+                seed_abstracts:
+                  type: string
+                  format: binary
+                  description: The abstract file should be in a csv
+                    format(SLR_Author|AbstractID|Abstract_Year|Abstract)
+                path:
+                  type: string
+                  description: >-
+                    File path to save the result to ( including the file name
+                    and .ext)
+      summary: This endpoint returns the Boolean query.
+      description: This endpoint returns the Boolean query.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /callingAPI/IEEEXPLORE:
+    post:
+      tags:
+        - Interface to different digital libraries search services
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                search_query:
+                  type: string
+                  format: binary
+                  description: The search query should be in a csv file (ID|Query)
+                inclusion_year_from:
+                  type: string
+                  nullable: true
+                  description: year from
+                inclusion_year_to:
+                  type: string
+                  nullable: true
+                  description: year to
+                path:
+                  type: string
+                  description: >-
+                    File path to save the result to (including the file name and .ext)
+
+      summary: This endpoint retrieves search results from IEEEXplore.
+      description: This endpoint retrieves search results from IEEEXplore.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /similarity/queries/abstracts:
+    post:
+      tags:
+        -   Generate query performance prediction features
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                abstracts:
+                  type: string
+                  format: binary
+                  description: >-
+                    The abstract file should be in a csv format(
+                    SLR_Author|AbstractID|Abstract_Year|Abstract)
+                queries:
+                  type: string
+                  format: binary
+                  description: >-
+                    The query file should be in a csv
+                    format(QueryID|Query)
+                path:
+                  type: string
+                  description: >-
+                    File path (including the file name and .ext) to save the
+                    result to
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Select an embedding model
+      summary: >-
+        This endpoint returns the similarity of given search query
+        and retrieved abstracts, using the selected word embedding model.
+      description: >-
+        This endpoint returns the similarity of given search query
+        and retrieved abstracts, using the selected word embedding model.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /similarity/queries:
+    post:
+      tags:
+        - Generate query performance prediction features
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  format: binary
+                  description: >-
+                    The query file should be in a csv format(Query_ID|Query)
+                slr:
+                  type: string
+                  format: binary
+                  description: >-
+                    The query file should be in a csv format(SLR_ID|SLR_Query)
+                path:
+                  type: string
+                  description: >-
+                    File path( including the file name and .ext) to save the
+                    result to
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Select an embedding model
+      summary: >-
+        This endpoint returns the similarity of given queries built atomatically
+        and original queries from SLRs
+      description: >-
+         This endpoint returns the similarity of given queries built atomatically
+         and original queries from SLRs
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /similarity/seeds/abstracts:
+    post:
+      tags:
+        -   Generate query performance prediction features
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                abstracts:
+                  type: string
+                  format: binary
+                  description: >-
+                    The abstract file should be in a csv format(
+                    SLR_Author|AbstractID|Abstract_Year|Abstract)
+                seeds:
+                  type: string
+                  format: binary
+                  description: >-
+                    The seed file should be in a csv format(
+                    SLR_Author|AbstractID|Abstract_Year|Abstract)
+                path:
+                  type: string
+                  description: >-
+                    File path( including the file name and .ext) to save the
+                    result to
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Please select an embedding model
+      summary: >-
+        This endpoint returns the similarity of seeds abstracts which are human
+        judged and abstracts that are not yet screened, using the selected word
+        embedding model.
+      description: >-
+        This endpoint returns the similarity of seeds abstracts which are human
+        judgd and abstracts that are not yet screened, using the selected word
+        embedding model.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /import/abstracts:
+    post:
+      tags:
+        -  Refine search queries
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                abstracts:
+                  type: string
+                  format: binary
+                  description: >-
+                    The abstract file should be in a csv format(
+                    SLR_Author|AbstractID|Abstract_Year|Abstract)
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Please select an embedding model
+      summary: >-
+        This endpoint receives abstracts with feedback. It updates the rewards/demotes for extracted terms, and refines the query for an iteration accordingly.
+      description: >-
+        This endpoint receives abstracts with feedback. It updates the rewards/demotes for extracted terms, and refines the query for an iteration accordingly.
+      responses:
+        '200':
+          description: Operation Successful
+        '400':
+          description: 'invalid input, object invalid'
+
+  /similarity/compare/models:
+    post:
+      tags:
+        -  Additional Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  format: binary
+                  description: The abstract file should be a text file
+                corpus:
+                  type: string
+                  format: binary
+                  description: The abstract file should be a text file
+      summary: This endpoint returns the similarity of given corpuses using jaccard similarity.
+      description: This endpoint returns the similarity of given corpuses using jaccard similarity.
+      responses:
+        '200':
+          description: A nunmber figure
+          content:
+            application/json:
+              schema:
+                type: number
+                items:
+                  type: number
+        '400':
+          description: 'invalid input, object invalid'
+  /similarity/questions:
+    post:
+      tags:
+        -  Additional Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                questions:
+                  type: string
+                  format: binary
+                  description: >-
+                    The question file should be in a csv
+                    format(QuestionID|Question)
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Please select an embedding model
+      summary: >-
+        This endpoint returns the similarity of given research questions (RQs)
+        and abstracts from database, using the selected word embedding model.
+      description: >-
+        This endpoint returns the similarity of given research questions (RQs)
+        and abstracts from database, using the selected word embedding model.
+      responses:
+        '200':
+          description: Operation Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+  /extract/TF_IDF:
+    post:
+      tags:
+        - Additional Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                abstracts:
+                  type: string
+                  format: binary
+                  description: >-
+                    The abstract file should be in a csv format(
+                    SLR_Author|AbstractID|Abstract_Year|Abstract)
+                path:
+                  type: string
+                  description: >-
+                    File path( including the file name and .ext) to save the
+                    result to
+      summary: This endpoint returns TF-IDF of terms within the given corpora.
+      description: This endpoint returns TF-IDF of terms within the given corpora.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+
+  /Classifier/SVM:
+    post:
+      tags:
+        - Additional Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                date_file:
+                  type: string
+                  format: binary
+                  description: >-
+                    The data file in csv format(SLR_Author|AbstractID|Abstract_Year|Abstract|label)
+                path:
+                  type: string
+                  description: >-
+                    File path(including the file name and .ext ) to state the result into
+                classifier_model:
+                  type: string
+                  enum:
+                    - SVM
+                    - LR
+                  default: SVM
+                  description: Selecte the model
+                number:
+                  type: string
+                  description: >-
+                    Number of papers to review during the active learning process.
+
+      summary: >-
+        This endpoint retrain the SVM classifier based on the new labeled set that receive everytime.
+        It also ranks the unlabeled reords to show to the user.
+      description: >-
+        This endpoint retrain the SVM classifier based on the new labeled set that receive everytime.
+        It also ranks the unlabeled reords to show to the user.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
+
+  /enrich/keywords:
+    post:
+      tags:
+        - Additional Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Keywords:
+                  type: string
+                  format: binary
+                  description: >-
+                    list of keywords that are used to search for relevant
+                    studies
+                embedding_model:
+                  type: string
+                  enum:
+                    - Wikipedia
+                    - WikipediaNews
+                    - Glove
+                    - ConceptNet
+                  default: Wikipedia
+                  description: Please select an embedding model
+      summary: >-
+        This endpoint returns the most similar keywords to a given list of
+        search keywords, by using selected embedding model.
+      description: >-
+        This endpoint returns the most similar keywords to a given list of
+        search keywords, by using selected embedding model.
+      responses:
+        '200':
+          description: A JSON array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: 'invalid input, object invalid'
