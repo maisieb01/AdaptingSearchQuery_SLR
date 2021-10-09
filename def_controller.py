@@ -105,7 +105,7 @@ def __file_validity():
     return True
 
 
-# creating the vectors of abstracts and questions' keywords
+# creating the vectors of abstracts and queries' keywords
 def corpus_to_keywords(corpus):
     calling_endpoint = 'http://localhost:9000/?properties="annotators":"tokenize,pos,lemma","outputFormat":"json"'
     response = requests.post(calling_endpoint, data=corpus.replace('.', ' and ').encode('utf-8'))
@@ -151,7 +151,7 @@ def __word2vec_model(word, embedding_model):
         model_url = 'https://tfhub.dev/google/universal-sentence-encoder-large/3'
     elif embedding_model == 'ELMo':
         model_url = 'https://tfhub.dev/google/universal-sentence-encoder-large/3'
-    # TODO
+   
     response = requests.get(model_url.format(word))
     if response.status_code == 200:
         if 'vector' in json.loads(response.content):
@@ -519,8 +519,8 @@ def query_embed(query, embedding_model: str, path: str):
 # call DL API (IEEXPLORE)
 def IEEE_Xplore(corpus, path: str, from_year: int, to_year: int):
     url = "http://ieeexploreapi.ieee.org/api/v1/search/articles?"
-    # key = "&apikey=ymuyw5jx2brg4n9gabgfadbw&format=json"
-    key = "&apikey=ymuyw5jx2brg4n9gabgfadbw&format=json&max_records=7000&start_record=1&sort_order=asc&sort_field=relevance&end_year={}".format(
+    # key = "&apikey=###################&format=json"
+    key = "&apikey=Institute key&format=json&max_records=7000&start_record=1&sort_order=asc&sort_field=relevance&end_year={}".format(
         to_year) + "&start_year={}".format(from_year)
     querytext = 'querytext={}'.format(corpus)
     # querytext = "querytext=(Metadata%20OR%20%22predict%20OR%20%22software%20OR%20%22defect%20OR%20%22qulity%22)"
@@ -652,23 +652,22 @@ def format_result(path_in, path_out):
 
 # Reward _Demote Schema
 def Reward_Demote(previous_keywordset: str, new_keywordset: str, iteration: int, path: str):
-    # new keyword set has the IR and R tagged
-    # previous keyword set has the reward/ demote values
-    # for each t in new_keywordset
-
-    #     if  t in previous_keywordset and t is tagged R
-    #               previous_keywordset [t].reward +1
-    #     if t not in previous_keywordset and t is tagged R
-    #             add t to previous_keywordset
-    #             previous_keywordset[t].reward +1
-    #      else  if  t in previous_keywordset and t is tagged IR
-    #              previous_keywordset [t].demote +1
-    #     else  if t not in previous_keywordset and t is tagged IR
-    #                do not add
-    # if path is not '':
-    #     try:
-    #         with open(path, 'w+', newline='') as output_file:
-    #             writer = csv.DictWriter(output_file, fieldnames=["Keyword", "Number", "TF", "Synonyms","Reward","Demote", "search query","vector"])
+#     new keyword set has the IR and R tagged
+#     previous keyword set has the reward/ demote values
+    for each t in new_keywordset
+        if  t in previous_keywordset and t is tagged R
+                  previous_keywordset [t].reward +1
+        if t not in previous_keywordset and t is tagged R
+                add t to previous_keywordset
+                previous_keywordset[t].reward +1
+         else  if  t in previous_keywordset and t is tagged IR
+                 previous_keywordset [t].demote +1
+        else  if t not in previous_keywordset and t is tagged IR
+                   do not add
+    if path is not '':
+        try:
+            with open(path, 'w+', newline='') as output_file:
+                writer = csv.DictWriter(output_file, fieldnames=["Keyword", "Number", "TF", "Synonyms","Reward","Demote", "search query","vector"])
     return True
 
 
@@ -918,13 +917,13 @@ def import_abstract_embed(abstracts, embedding_model: str):
     return True
 
 
-# create vectors of the given questions and fetch the similarity with the existing abstracts in the DB
+# create vectors of the given queries and fetch the similarity with the existing abstracts in the DB
 def question_embed(questions, embedding_model: str):
     import SLR_API.db_controller as db_controller
     # pre-processing the questions
     if "questions" in questions:
         all_question_avg_vectors = []
-        clean_questions = __vec_corpus(questions["questions"], "questions")
+        clean_questions = __vec_corpus(questions["queries"], "questions")
         for item in clean_questions:
             question_words_vectors = []
             for keyword in item['keywords']:
@@ -935,7 +934,7 @@ def question_embed(questions, embedding_model: str):
                 item.update({'vector': avg_question_vector})
             all_question_avg_vectors.append(item)
         abstracts = db_controller.get_abstracts(embedding_model)
-        return calculating_similarity_word2vec(abstracts, all_question_avg_vectors, "question", path="")
+        return calculating_similarity_word2vec(abstracts, all_question_avg_vectors, "query", path="")
 
 
 # enrich the given list of keywords
