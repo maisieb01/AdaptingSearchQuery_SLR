@@ -78,45 +78,7 @@ def add_abstract(abstract_id, abstract_year, abstract, slr_author, vec_keywords,
         print("An error occurred for inserting to table {} ".format(Err))
 
 
-# select abstracts from abstract tables
-# def get_abstracts(embedding_model, slr_author):
-#     try:
-#
-#         embedding_model = em.convert_model(embedding_model)
-#         query = ("SELECT abstract_id ,json_format,embedding_model,vec_average,incl_excl FROM slr_db.Embedded_Abstracts "
-#                  "WHERE embedding_model = '%s' AND slr_author='%s'" % (embedding_model, slr_author))
-#         cnx = mysql.connector.connect(user='root', password='slradmin', host='localhost', database='slr_db')
-#         cnx.ping(True)
-#         curs = cnx.cursor()
-#         DB_NAME = "slr_db"
-#         curs.execute("USE {}".format(DB_NAME))
-#         curs.execute(query)
-#         parameters = []
-#         for row in curs:
-#             parameters.append(json.loads(row[1]))
-#         return parameters
-#     except mysql.connector.errors.DatabaseError as Err:
-#         cnx = mysql.connector.connect(user='root', password='slradmin')
-#         curs = cnx.cursor()
-#         DB_NAME = "slr_db"
-#         curs.execute("USE {}".format(DB_NAME))
-#         query = ("SELECT abstract_id ,json_format,embedding_model,vec_average FROM Embedded_Abstracts;")
-#         curs.execute(query)
-#         parameters = []
-#         for row in curs:
-#             parameters.append(json.loads(row[1]))
-#         return parameters
-#
-#
-# (`iteration_id`,
-# `term`,
-# `synonym`,
-# `reward`,
-# `demote`,
-# `search_query`,
-# `tf_idf`,
-# `review_Id`,
-# `review_name`)
+
 
 def add_iteration_result(term, tf_idf, synonym, reward, demote, search_query, review_name, corpus_type):
     try:
@@ -235,6 +197,46 @@ def drop_table(table_name: str):
             return json.loads(row[1])
         return None
 
+# select abstracts from abstract tables
+# def get_abstracts(embedding_model, slr_author):
+#     try:
+#
+#         embedding_model = em.convert_model(embedding_model)
+#         query = ("SELECT abstract_id ,json_format,embedding_model,vec_average,incl_excl FROM slr_db.Embedded_Abstracts "
+#                  "WHERE embedding_model = '%s' AND slr_author='%s'" % (embedding_model, slr_author))
+#         cnx = mysql.connector.connect(user='root', password='slradmin', host='localhost', database='slr_db')
+#         cnx.ping(True)
+#         curs = cnx.cursor()
+#         DB_NAME = "slr_db"
+#         curs.execute("USE {}".format(DB_NAME))
+#         curs.execute(query)
+#         parameters = []
+#         for row in curs:
+#             parameters.append(json.loads(row[1]))
+#         return parameters
+#     except mysql.connector.errors.DatabaseError as Err:
+#         cnx = mysql.connector.connect(user='root', password='slradmin')
+#         curs = cnx.cursor()
+#         DB_NAME = "slr_db"
+#         curs.execute("USE {}".format(DB_NAME))
+#         query = ("SELECT abstract_id ,json_format,embedding_model,vec_average FROM Embedded_Abstracts;")
+#         curs.execute(query)
+#         parameters = []
+#         for row in curs:
+#             parameters.append(json.loads(row[1]))
+#         return parameters
+#
+#
+# (`iteration_id`,
+# `term`,
+# `synonym`,
+# `reward`,
+# `demote`,
+# `search_query`,
+# `tf_idf`,
+# `review_Id`,
+# `review_name`)    
+    
 #
 # dataset2 = get_abstracts("glove", "SLR_Kitchenham")
 # # print(dataset2[0]["vector"])
