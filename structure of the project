@@ -18,9 +18,6 @@ There are three main files in this project.
 
 there are additional endpoints that we used during our studies.
 
-**def_controller.py** includes all the definittions  
-1. 
+**def_controller.py** includes all the definittions of this project   
 
-
-
-db_controller.py
+**db_controller.py**  includes all the definittions of this project   
