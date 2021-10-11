@@ -1,5 +1,3 @@
-### Get the online reading of files to work.
-
 import re, gzip, pickle, time
 from multiprocessing import Queue, Lock
 import threading
