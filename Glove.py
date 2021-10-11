@@ -240,7 +240,7 @@ class Glove(object):
             batch_length = 0
 
         for _ in range(workers):
-            jobs.put(None)  # give the workers heads up that they can finish -- no more work!
+            jobs.put(None)  
 
         for thread in workers_threads:
             thread.join()
