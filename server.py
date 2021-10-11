@@ -1,4 +1,23 @@
-# import mysql
+# **Server.Py** : This file includes the endpoints for swagger API ,
+
+# @app.route("/searchquery", methods=["POST"]) : 
+# # This endpoint is used for building search queries of given seeds and the result is saved into a csv file
+# @app.route("/callingAPI/IEEEXPLORE", methods=["POST"]) :
+# # This endpoint is used to execute boolean queries by calling digital libraries APIs and retrieves the query results into a csv file
+
+# @app.route("/similarity/queries", methods=["POST"]) : 
+# # This endpoint generates vectors for given search queries based on the selected embedding model and return the similarity result of the given queries(QPPs)
+# @app.route("/similarity/query/abstracts", methods=["POST"]) : 
+# # This endpoint generates vectors for given search queries and abstracts based on the selected embedding model and return the similarity result of the given inputs (QPPs)
+# @app.route("/similarity/query/abstracts", methods=["POST"]) :
+# # This endpoint generates vectors for given relevant asbtracts and retrievd abstracts based on the selected embedding model and return the similarity result of the given inputs(QPPs)
+# @app.route("/import/abstracts", methods=["POST"])
+# # This endpoint recieved labeled abstracts (relevant/irrelevant), to then extrct keywords from it and update the search terms rewards and demotes in Mysql database.
+
+# there are additional endpoints that we used during our studies.
+
+
+
 import csv
 import json
 from flask import Flask, jsonify, request, send_file, flash, redirect, render_template, Response
@@ -8,7 +27,6 @@ import SLR_API.def_controller as def_controller
 import SLR_API.service as slr_service
 import flask_swagger_ui
 from flask_cors import CORS
-# TF-IDF
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import numpy as np
