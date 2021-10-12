@@ -1,3 +1,5 @@
+# This file contains all the functions for data integration into mysql 
+
 import mysql.connector
 from mysql.connector import errorcode
 import mysql.connector.errors
