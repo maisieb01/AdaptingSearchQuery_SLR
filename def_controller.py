@@ -1,4 +1,4 @@
-# To DO recall,
+# recall,
 # precision,
 # Matthews correlation coefficient (MCC),
 # work saved over sampling (WSS) measures
@@ -177,59 +177,6 @@ def most_similar_model(word, embedding_model):
     else:
         return None
 
-
-# back up 20201105
-# def calculating_similarity_word2vec(avg_abstract_vector: [], ave_question_vector: [], corpus_type, path) -> object:
-#     list_of_dict = []
-#     if corpus_type == 'seed':
-#         for abstract_var in avg_abstract_vector:
-#             similarity_list = {}
-#             abst_key = list(abstract_var.keys())[0]
-#             for seed in ave_question_vector:
-#                 seed_key = list(seed.keys())[0]
-#                 similarity_list['absId'] = '{}'.format(abstract_var[abst_key]['AbstractID'])
-#                 similarity_list['seedId'] = '{}'.format(seed[seed_key]['AbstractID'])
-#                 similarity_list['similarity'] = '{}'.format(
-#                     1 - sp.distance.cosine(seed['vector'], abstract_var['vector']))
-#                 # similarity_list['Include'] = '{}'.format(abstract_var[abst_key]['incl_excl'])
-#                 list_of_dict.append(similarity_list.copy())
-#
-#     else:
-#         for abstract_var in avg_abstract_vector:
-#             similarity_list = {}
-#             abst_key = list(abstract_var.keys())[0]
-#             for question in ave_question_vector:
-#                 question_key = list(question.keys())[0]
-#                 similarity_list['absId'] = '{}'.format(abstract_var[abst_key]['AbstractID'])
-#                 similarity_list['qesId'] = '{}'.format(question_key)
-#                 similarity_list['similarity'] = '{}'.format(
-#                     1 - sp.distance.cosine(question['vector'], abstract_var['vector']))
-#                 # similarity_list['Include'] = '{}'.format(abstract_var[abst_key]['incl_excl'])
-#                 list_of_dict.append(similarity_list.copy())
-#
-#     # write to a CSV
-#     keys = set()
-#     # myorder = ['absID', 'qesId', 'similarity']
-#     # from collections import OrderedDict
-#     # ordered = OrderedDict((k, list_of_dict[k]) for k in myorder)
-#     for d in list_of_dict:
-#         keys.update(d.keys())
-#     # with open("C:\\Users\\maisieb01\\Desktop\\PHD\\Framework\\Data\\20082020\\test.csv", 'a') as output_file:
-#     if path is not '':
-#         try:
-#             with open(path, 'a') as output_file:
-#                 dict_writer = csv.DictWriter(output_file, fieldnames=keys, restval='-', delimiter=',')
-#                 dict_writer.writeheader()
-#                 dict_writer.writerows(list_of_dict)
-#         except ValueError as e:
-#             json.dumps("The path is not valid {}".format(e),
-#                        content_type="application/json")
-#         # sort based on similarity
-#     return json.dumps(sorted(list_of_dict, key=lambda i: i['similarity'], reverse=True))
-#     # return json.dumps(sorted(list_of_dict, key=lambda i: i['absId'], reverse=True))
-#     # Get JSON Data
-
-
 # calculating the average value of the vector of abstracts
 def calculating_similarity_word2vec(avg_abstract_vector: [], ave_question_vector: [], corpus_type, path) -> object:
     list_of_dict = []
@@ -391,59 +338,7 @@ def __vec_corpus(corpus, corpus_type):
     return corpus
 
 
-# SVM classifier
-def SVM_classifier(abstract, path: str):
-    # # --> cleaning abstracts
-    # clean_abstracts = __vec_corpus(abstract["abstracts"], "abstract")
-    # for item in clean_abstracts:
-    #     abstract_words_vectors = []
-    #     for keyword in item['keywords']:
-    #         # --> embedding each keyword within the list of keywords
-    #         word_vector = __word2vec_model(keyword, embedding_model)
-    #         if word_vector is not None:
-    #             abstract_words_vectors.append(word_vector)
-    #         avg_abstract_vector = np.mean(abstract_words_vectors, axis=0)
-    #     item.update({'vector': avg_abstract_vector})
-    #     all_abstracts_avg_vectors.append(item)
-    # # --> calling calculating_similarity to calculate the cosine similarity between abstracts and questions
-    #
-    # dataset = pd.read_csv('C:\\Users\\maisieb01\\Desktop\\PHD\\Framework\\Data\\SLR\\Clean\\EXP\\Asbtracts-Classifier.csv',
-    #                       encoding='windows-1252', error_bad_lines=False)
-    #
-    # X = dataset.drop('Class', axis=1)
-    # y = dataset['Class']
-    #
-    # from sklearn.model_selection import train_test_split
-    #
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
-    #
-    # from sklearn.svm import SVC
-    #
-    # svclassifier = SVC(kernel='linear')
-    # svclassifier.fit(X_train, y_train)
-    #
-    # y_pred = svclassifier.predict(X_test)
-    #
-    # from sklearn.metrics import classification_report, confusion_matrix
-    #
-    # print(confusion_matrix(y_test, y_pred))
-    # print(classification_report(y_test, y_pred))
-    return True
 
-
-# def keywords2Vec():
-#         clean_questions = __vec_corpus(abstract_question["questions"], "questions")
-#         for item in clean_questions:
-#             question_words_vectors = []
-#             for keyword in item['keywords']:
-#                 word_vector = __word2vec_model(keyword, embedding_model)
-#                 if word_vector is not None:
-#                     question_words_vectors.append(word_vector)
-#                 avg_question_vector = np.mean(question_words_vectors, axis=0)
-#             item.update({'vector': avg_question_vector})
-#             all_questions_avg_vectors.append(item)
-#
-#     return True
 
 # --> first Endpoint , getting Abstract and the questions and return the similarity
 # --> from server @app.route("/similarity_questions_abstracts", methods=["POST"])
@@ -693,17 +588,6 @@ def TF_IDF(corpus, review_name: str, iteration: int, corpus_type: str):
         weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
         weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
         weights_df = weights_df.sort_values(by='weight', ascending=False)
-
-        # calling_endpoint = 'http://localhost:9000/?properties="annotators":"tokenize,pos,lemma","outputFormat":"json"'
-        # response = requests.post(calling_endpoint, data=sentences.replace('.', ' and ').encode('utf-8'))
-        # result = response.json()
-        # keywords_list = []
-        # for sentence in result['sentences']:
-        #     for token in sentence['tokens']:
-        #         if not token['word'].lower() in stopwords_local and not token['lemma'].lower() in stopwords_local:
-        #             if token['pos'] in {'VB', 'VBN', 'VBD', 'VBG', 'VBP', 'VBZ', 'NNP', 'NNS', 'NNPS', 'NN', 'JJ'}:
-        #                 keywords_list.append(token['lemma'])
-
         # weights_df.to_csv(insert_dash(path, len(path) - 4, '_idf'), index=True)
         for row in weights_df.iterrows():
             row_index, row_values = row
@@ -789,11 +673,6 @@ def form_search_query(corpus, embedding_model: str, path: str, call_type: str):
         for item in clean_questions:
             for keyword in item['keywords']:
                 words_vectors.append(keyword)
-                # if not any(d['keyword'] == keyword for d in list_of_dict_Glove):
-                #     word_vector_Glove['keyword'] = '{}'.format(keyword)
-                #     word_vector_Glove['vector'] = '{}'.format(__word2vec_model(keyword, 'Glove'))
-                #     list_of_dict_Glove.append(word_vector_Glove.copy())
-
     ## Add keywords
     # total number of  words in document
     total_occurrence = sum(Counter(words_vectors).values())
@@ -1008,3 +887,62 @@ def page_not_found(error):
 if __name__ == '__main__':
     app.debug = True
     app.run()
+    
+    
+ 
+
+# SVM classifier
+def SVM_classifier(abstract, path: str):
+    # --> cleaning abstracts
+    clean_abstracts = __vec_corpus(abstract["abstracts"], "abstract")
+    for item in clean_abstracts:
+        abstract_words_vectors = []
+        for keyword in item['keywords']:
+            # --> embedding each keyword within the list of keywords
+            word_vector = __word2vec_model(keyword, embedding_model)
+            if word_vector is not None:
+                abstract_words_vectors.append(word_vector)
+            avg_abstract_vector = np.mean(abstract_words_vectors, axis=0)
+        item.update({'vector': avg_abstract_vector})
+        all_abstracts_avg_vectors.append(item)
+    # --> calling calculating_similarity to calculate the cosine similarity between abstracts and questions
+    
+    dataset = pd.read_csv('C:\\Users\\maisieb01\\Desktop\\PHD\\Framework\\Data\\SLR\\Clean\\EXP\\Asbtracts-Classifier.csv',
+                          encoding='windows-1252', error_bad_lines=False)
+    
+    X = dataset.drop('Class', axis=1)
+    y = dataset['Class']
+    
+    from sklearn.model_selection import train_test_split
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
+    
+    from sklearn.svm import SVC
+    
+    svclassifier = SVC(kernel='linear')
+    svclassifier.fit(X_train, y_train)
+    
+    y_pred = svclassifier.predict(X_test)
+    
+    from sklearn.metrics import classification_report, confusion_matrix
+    
+    print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    return True
+
+
+# def keywords2Vec():
+#         clean_questions = __vec_corpus(abstract_question["questions"], "questions")
+#         for item in clean_questions:
+#             question_words_vectors = []
+#             for keyword in item['keywords']:
+#                 word_vector = __word2vec_model(keyword, embedding_model)
+#                 if word_vector is not None:
+#                     question_words_vectors.append(word_vector)
+#                 avg_question_vector = np.mean(question_words_vectors, axis=0)
+#             item.update({'vector': avg_question_vector})
+#             all_questions_avg_vectors.append(item)
+#
+#     return True
+
+  
